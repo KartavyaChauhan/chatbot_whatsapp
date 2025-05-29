@@ -1,4 +1,5 @@
 Travel Studio Internship Assignment - Guest Request Logging Workflow
+
 This project implements a Guest Request Logging Workflow for Travel Studio, allowing guests to send requests via WhatsApp, processing them through an n8n workflow, storing them in a PostgreSQL database using a NestJS backend, and displaying them on a Next.js dashboard. The app works fine on localhost, but the Vercel deployment has an issue due to backend accessibility constraints.
 
 Project Structure
