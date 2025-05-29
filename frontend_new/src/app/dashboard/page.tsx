@@ -16,6 +16,7 @@ export default function Dashboard() {
         setRequests(data);
         setLoading(false);
       } catch (err) {
+        console.error("An error occurred:", err);
         setError("Failed to fetch requests");
         setLoading(false);
       }

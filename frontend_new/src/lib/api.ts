@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Request } from '../types/request';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3001/api', // Your NestJS backend API
+  baseURL: 'http://localhost:3001/api', 
 });
 
 export const fetchPendingRequests = async (): Promise<Request[]> => {
