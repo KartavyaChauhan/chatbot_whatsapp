@@ -75,14 +75,15 @@ Import the workflow:
 Open http://localhost:5678 in your browser.
 Import workflow/request-workflow.json.
 Configure Twilio credentials in n8n (Account SID and Auth Token from Twilio Console).
+
 WhatsApp Sandbox Setup
+
 Sign up for the Twilio WhatsApp Sandbox at https://console.twilio.com.
 Join the sandbox by sending join <sandbox-key> (e.g., join travel-studio) from your WhatsApp number (+917838803929) to +14155238886.
 Set the Twilio webhook URL:
-Expose n8n using ngrok:
-bash
 
-Copy
+Expose n8n using ngrok:
+
 ngrok http 5678
 Set the "A Message Comes In" webhook in Twilio to https://<ngrok-url>.ngrok-free.app/webhook-test/twilio-webhook (HTTP method: POST).
 Testing Instructions
@@ -91,18 +92,23 @@ Ensure backend, frontend, and n8n are running locally.
 Simulate a WhatsApp request using curl (due to ngrok limitation):
 bash
 
-Copy
 curl -X POST http://localhost:5678/webhook-test/twilio-webhook \
 -H "Content-Type: application/x-www-form-urlencoded" \
 -d "From=%2B917838803929&To=%2B14155238886&Body=need%20extra%20pillows"
+
 Check backend logs to confirm the request was saved.
+
 Open http://localhost:3000 to view the request on the dashboard.
+
 Testing with Twilio
+
 Expose n8n using ngrok (see WhatsApp Sandbox Setup).
 Send a WhatsApp message (e.g., “need extra pillows”) to +14155238886.
 Verify the n8n workflow processes the request and sends a reply.
 Note: The backend must be publicly accessible for this to work end-to-end (e.g., deploy to Render).
+
 Vercel Deployment
+
 The frontend is deployed at https://chatbot-whatsapp-lasl.vercel.app.
 Issue: It shows "Application error: a client-side exception has occurred" because the backend isn’t publicly accessible (ngrok free plan limits to one tunnel). The app works fine on localhost, as shown in the demo video.
 To fix this, deploy the backend to a hosting service like Render and update NEXT_PUBLIC_API_URL in Vercel.
