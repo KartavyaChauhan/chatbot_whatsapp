@@ -1,0 +1,199 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "twilio-webhook",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        420,
+        -100
+      ],
+      "id": "f677d86d-e835-4861-a64c-d688bdfe9a61",
+      "webhookId": "53770dbe-bf10-4f33-9a60-edb64426130b"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "guestPhone",
+              "value": "={{ $json['body']['WaId'] }}"
+            },
+            {
+              "name": "whatsappFrom",
+              "value": "=\"={{ $json['body']['From'] }}\""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "SetGuestPhone",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -120
+      ],
+      "id": "a7ad46a0-cc61-47b5-9799-7782bc003bd7"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "requestText",
+              "value": "={{ $json['body']['Body'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "SetRequestText",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        -100
+      ],
+      "id": "2de3acb3-b032-4908-bd27-07902e6bc275"
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "http://127.0.0.1:3000/api/requests",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "guestPhone",
+              "value": "={{ $node['SetGuestPhone'].json['guestPhone'] }}"
+            },
+            {
+              "name": "requestText",
+              "value": "={{ $node['SetRequestText'].json['requestText'] }}"
+            }
+          ]
+        }
+      },
+      "name": "SendToNestJS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        -80
+      ],
+      "id": "832c0918-2193-4969-9b76-adf3932067a6"
+    },
+    {
+      "parameters": {
+        "from": "+14155238886",
+        "to": "+917838803929",
+        "toWhatsapp": true,
+        "message": "Request received! Our staff will assist you soon.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        -100
+      ],
+      "id": "ef2d7b17-ab22-4c84-b414-43f759cc6b4b",
+      "name": "Twilio",
+      "credentials": {
+        "twilioApi": {
+          "id": "62MnbXESe3sm7QKx",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "console.log('Data being sent to backend:', {\n  guestPhone: $('SetRequestText').first().json.guestPhone,\n  requestText: $('SetGuestPhone').first().json.requestText\n});\n\nreturn $input.all();\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        -100
+      ],
+      "id": "a196bf9c-7efc-47eb-8ca8-aa7fbe5e53af",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "SetGuestPhone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetGuestPhone": {
+      "main": [
+        [
+          {
+            "node": "SetRequestText",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetRequestText": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SendToNestJS": {
+      "main": [
+        [
+          {
+            "node": "Twilio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "SendToNestJS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "788b5138-b35c-4e5e-9a13-ee7aeb7eb2f1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6ac0789f205d9c5c2df8c4ae9b1248fee1c99ca97d69edb8e421cb622db3fa5f"
+  },
+  "id": "MWBjCutNFe55MHmo",
+  "tags": []
+}
